@@ -145,12 +145,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 4. Push to the branch
 5. Create a Pull Request
 
-## Support
-
-For support, please open an issue in the GitHub repository.
-
----
-
 ## 🙌 Acknowledgment
 
 This project was developed and maintained by me **Ghaith Saidani**. Contributions, suggestions, and feedback are welcome!
