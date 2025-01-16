@@ -117,7 +117,7 @@ Follow these steps to set up and run the server:
    - Access Node-RED at [http://localhost:1880](http://localhost:1880)
    - Click on the menu in the top-right corner
    - Select "Manage Palette"
-   - install those 3 plugin : node-red-node-mqtt, node-red-dashboard, node-red-contrib-http-request
+   - install those 3 plugin: `node-red-node-mqtt`, `node-red-dashboard`, `node-red-contrib-http-request`
    - Click on the menu in the top-right corner
    - Select "Import"
    - Click "Select a file to import"
