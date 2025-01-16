@@ -1,15 +1,15 @@
 [
     {
-        "id": "315c68e481dfdff6",
+        "id": "f205bc0b4547a229",
         "type": "tab",
         "label": "Voting Dashboard",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "8cd1e3ef75c4d885",
+        "id": "096067469d8033b6",
         "type": "ui_button",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Vote for Ghaith",
         "group": "cea41dcf941cfdb1",
         "order": 1,
@@ -19,7 +19,7 @@
         "label": "Ghaith",
         "tooltip": "",
         "color": "",
-        "bgcolor": "red",
+        "bgcolor": "",
         "className": "",
         "icon": "",
         "payload": "Ghaith",
@@ -30,14 +30,14 @@
         "y": 220,
         "wires": [
             [
-                "054f3f5fac949767"
+                "3c2a431c2d3529c2"
             ]
         ]
     },
     {
-        "id": "6f570e0a54172a97",
+        "id": "f710236437bddfc9",
         "type": "ui_button",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Vote for Kamel",
         "group": "cea41dcf941cfdb1",
         "order": 2,
@@ -47,7 +47,7 @@
         "label": "Kamel",
         "tooltip": "",
         "color": "",
-        "bgcolor": "green",
+        "bgcolor": "",
         "className": "",
         "icon": "",
         "payload": "Kamel",
@@ -58,14 +58,14 @@
         "y": 260,
         "wires": [
             [
-                "054f3f5fac949767"
+                "3c2a431c2d3529c2"
             ]
         ]
     },
     {
-        "id": "ac578fbbf7c93e4e",
+        "id": "c510a9b4e3c56566",
         "type": "ui_button",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Vote for Mohamed",
         "group": "cea41dcf941cfdb1",
         "order": 3,
@@ -86,14 +86,14 @@
         "y": 300,
         "wires": [
             [
-                "054f3f5fac949767"
+                "3c2a431c2d3529c2"
             ]
         ]
     },
     {
-        "id": "054f3f5fac949767",
+        "id": "3c2a431c2d3529c2",
         "type": "function",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Prepare Vote Message",
         "func": "let voter = flow.get(\"voter\") || \"Anonymous\";\n\nreturn {\n    payload: JSON.stringify({\n        candidate: msg.payload,\n        voter: voter\n    }),\n    topic: \"voting/cast\"\n};",
         "outputs": 1,
@@ -106,15 +106,14 @@
         "y": 260,
         "wires": [
             [
-                "1b71f6bc1f5dce43",
-                "52b250add2763335"
+                "f93f08455ebd4421"
             ]
         ]
     },
     {
-        "id": "1b71f6bc1f5dce43",
+        "id": "f93f08455ebd4421",
         "type": "mqtt out",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Publish Vote",
         "topic": "voting/cast",
         "qos": "1",
@@ -125,14 +124,14 @@
         "correl": "",
         "expiry": "",
         "broker": "94969e73dab35de3",
-        "x": 980,
-        "y": 240,
+        "x": 990,
+        "y": 260,
         "wires": []
     },
     {
-        "id": "1db33d81ec657f98",
+        "id": "6e3cd81fd75b15bd",
         "type": "mqtt in",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Subscribe Results",
         "topic": "voting/results",
         "qos": "1",
@@ -145,14 +144,14 @@
         "y": 380,
         "wires": [
             [
-                "973dd0fca1316a48"
+                "aa1f4c6b085d5b48"
             ]
         ]
     },
     {
-        "id": "973dd0fca1316a48",
+        "id": "aa1f4c6b085d5b48",
         "type": "function",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Format Results",
         "func": "var votingData = []\n\nconst data = msg.payload.data[0];\nconst labels = msg.payload.labels\n\nfor (let i=0;i<labels.length; i++){\n    const dataSet = {\n        \"votes\": data[i],\n        \"candidate\": labels[i]\n    }\n    votingData.push(dataSet)\n}\n\nmsg.payload = votingData\n\nreturn msg;",
         "outputs": 1,
@@ -165,14 +164,14 @@
         "y": 380,
         "wires": [
             [
-                "e8ad4c7e5ffb4212"
+                "4748b4cbbcd3c4c2"
             ]
         ]
     },
     {
-        "id": "1cfda31cfb3845d6",
+        "id": "ebead9d443dff60b",
         "type": "ui_chart",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Results Chart",
         "group": "cea41dcf941cfdb1",
         "order": 4,
@@ -214,9 +213,9 @@
         ]
     },
     {
-        "id": "e550b25e6587a863",
+        "id": "36474d299b95e6db",
         "type": "function",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Reset Chart",
         "func": "return { payload: [], topic: 'reset' };",
         "outputs": 1,
@@ -224,35 +223,14 @@
         "y": 140,
         "wires": [
             [
-                "1cfda31cfb3845d6"
+                "ebead9d443dff60b"
             ]
         ]
     },
     {
-        "id": "52b250add2763335",
-        "type": "ui_text",
-        "z": "315c68e481dfdff6",
-        "group": "cea41dcf941cfdb1",
-        "order": 5,
-        "width": "6",
-        "height": "1",
-        "name": "Vote Status",
-        "label": "Status",
-        "format": "Vote submitted!",
-        "layout": "",
-        "className": "",
-        "style": false,
-        "font": "",
-        "fontSize": "",
-        "color": "#000000",
-        "x": 980,
-        "y": 300,
-        "wires": []
-    },
-    {
-        "id": "e8ad4c7e5ffb4212",
+        "id": "4748b4cbbcd3c4c2",
         "type": "split",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "",
         "splt": "\\n",
         "spltType": "str",
@@ -265,14 +243,14 @@
         "y": 380,
         "wires": [
             [
-                "34eb969902f8e068"
+                "356d616ae4cbf674"
             ]
         ]
     },
     {
-        "id": "34eb969902f8e068",
+        "id": "356d616ae4cbf674",
         "type": "change",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "",
         "rules": [
             {
@@ -299,14 +277,14 @@
         "y": 380,
         "wires": [
             [
-                "1cfda31cfb3845d6"
+                "ebead9d443dff60b"
             ]
         ]
     },
     {
-        "id": "0b3470b00cb6376d",
+        "id": "51b88ffc75fb22db",
         "type": "ui_button",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "",
         "group": "cea41dcf941cfdb1",
         "order": 5,
@@ -327,22 +305,22 @@
         "y": 100,
         "wires": [
             [
-                "054f3f5fac949767",
-                "e550b25e6587a863"
+                "3c2a431c2d3529c2",
+                "36474d299b95e6db"
             ]
         ]
     },
     {
-        "id": "4a9db9acfdf4a47b",
+        "id": "03f065fef141117e",
         "type": "ui_text_input",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Voter Name",
         "label": "Your name",
         "tooltip": "",
         "group": "cea41dcf941cfdb1",
         "order": 6,
-        "width": 0,
-        "height": 0,
+        "width": "6",
+        "height": "1",
         "passthru": true,
         "mode": "text",
         "delay": 300,
@@ -354,14 +332,14 @@
         "y": 260,
         "wires": [
             [
-                "16f115db511cee77"
+                "64b4cec98dd04a0c"
             ]
         ]
     },
     {
-        "id": "16f115db511cee77",
+        "id": "64b4cec98dd04a0c",
         "type": "function",
-        "z": "315c68e481dfdff6",
+        "z": "f205bc0b4547a229",
         "name": "Pass Voter Name",
         "func": "flow.set(\"voter\", msg.payload);\nreturn msg;",
         "outputs": 1,
@@ -374,9 +352,9 @@
         "y": 260,
         "wires": [
             [
-                "8cd1e3ef75c4d885",
-                "6f570e0a54172a97",
-                "ac578fbbf7c93e4e"
+                "096067469d8033b6",
+                "f710236437bddfc9",
+                "c510a9b4e3c56566"
             ]
         ]
     },

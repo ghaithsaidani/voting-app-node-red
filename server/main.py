@@ -5,7 +5,6 @@ from fastapi import FastAPI, HTTPException
 import paho.mqtt.client as mqtt
 from datetime import datetime
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -17,9 +16,8 @@ class VotingServer:
         self.broker = broker
         self.port = port
         self.votes: Dict[str, int] = {}
-        self.vote_history: List[Dict] = []  # Store voting history with names and timestamps
+        self.vote_history: List[Dict] = []
 
-        # Initialize MQTT client with protocol v5
         self.client = mqtt.Client(protocol=mqtt.MQTTv5)
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
@@ -29,7 +27,6 @@ class VotingServer:
         self.client.enable_logger(logger)
 
     def _on_connect(self, client, userdata, flags, rc, properties=None):
-        """Callback for when the client connects to the broker."""
         if rc == 0:
             logger.info("Connected to MQTT broker successfully")
             client.subscribe("voting/cast")
@@ -37,12 +34,10 @@ class VotingServer:
             logger.error(f"Failed to connect to MQTT broker with code: {rc}")
 
     def _on_disconnect(self, client, userdata, rc):
-        """Callback for when the client disconnects from the broker."""
         if rc != 0:
             logger.warning("Unexpected disconnection from MQTT broker")
 
     def _on_message(self, client, userdata, msg):
-        """Handle incoming vote messages."""
         try:
             data = json.loads(msg.payload.decode())
             candidate = data.get("candidate")
@@ -72,7 +67,6 @@ class VotingServer:
             logger.error(f"Error processing vote: {str(e)}")
 
     def _update_results(self):
-        """Publish updated voting results."""
         try:
             # Prepare data in the required format for Node-RED's ui_chart
             labels = list(self.votes.keys()) if self.votes else ["No Votes"]
@@ -89,14 +83,12 @@ class VotingServer:
             logger.error(f"Failed to publish results: {str(e)}")
 
     def clear_results(self):
-        """Clear the voting results."""
         self.votes.clear()
         self.vote_history.clear()
         self._update_results()  # Publish the cleared results
         logger.info("Voting results cleared")
 
     def start(self):
-        """Start the MQTT client."""
         try:
             self.client.connect(self.broker, self.port)
             self.client.loop_start()
@@ -110,19 +102,16 @@ voting_server = VotingServer()
 
 @app.on_event("startup")
 async def startup_event():
-    """Start the MQTT client when the FastAPI app starts."""
     voting_server.start()
 
 
 @app.get("/results")
 async def get_results():
-    """API endpoint to get current voting results."""
     return voting_server.votes
 
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
     if not voting_server.client.is_connected():
         raise HTTPException(status_code=503, detail="MQTT broker connection lost")
     return {"status": "healthy"}
