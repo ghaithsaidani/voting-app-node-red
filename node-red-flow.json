@@ -1,0 +1,433 @@
+[
+    {
+        "id": "315c68e481dfdff6",
+        "type": "tab",
+        "label": "Voting Dashboard",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "8cd1e3ef75c4d885",
+        "type": "ui_button",
+        "z": "315c68e481dfdff6",
+        "name": "Vote for Ghaith",
+        "group": "cea41dcf941cfdb1",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Ghaith",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "Ghaith",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 520,
+        "y": 220,
+        "wires": [
+            [
+                "054f3f5fac949767"
+            ]
+        ]
+    },
+    {
+        "id": "6f570e0a54172a97",
+        "type": "ui_button",
+        "z": "315c68e481dfdff6",
+        "name": "Vote for Kamel",
+        "group": "cea41dcf941cfdb1",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Kamel",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "green",
+        "className": "",
+        "icon": "",
+        "payload": "Kamel",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "054f3f5fac949767"
+            ]
+        ]
+    },
+    {
+        "id": "ac578fbbf7c93e4e",
+        "type": "ui_button",
+        "z": "315c68e481dfdff6",
+        "name": "Vote for Mohamed",
+        "group": "cea41dcf941cfdb1",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "Mohamed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "Mohamed",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "054f3f5fac949767"
+            ]
+        ]
+    },
+    {
+        "id": "054f3f5fac949767",
+        "type": "function",
+        "z": "315c68e481dfdff6",
+        "name": "Prepare Vote Message",
+        "func": "let voter = flow.get(\"voter\") || \"Anonymous\";\n\nreturn {\n    payload: JSON.stringify({\n        candidate: msg.payload,\n        voter: voter\n    }),\n    topic: \"voting/cast\"\n};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 260,
+        "wires": [
+            [
+                "1b71f6bc1f5dce43",
+                "52b250add2763335"
+            ]
+        ]
+    },
+    {
+        "id": "1b71f6bc1f5dce43",
+        "type": "mqtt out",
+        "z": "315c68e481dfdff6",
+        "name": "Publish Vote",
+        "topic": "voting/cast",
+        "qos": "1",
+        "retain": false,
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "94969e73dab35de3",
+        "x": 980,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1db33d81ec657f98",
+        "type": "mqtt in",
+        "z": "315c68e481dfdff6",
+        "name": "Subscribe Results",
+        "topic": "voting/results",
+        "qos": "1",
+        "datatype": "json",
+        "broker": "94969e73dab35de3",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 530,
+        "y": 380,
+        "wires": [
+            [
+                "973dd0fca1316a48"
+            ]
+        ]
+    },
+    {
+        "id": "973dd0fca1316a48",
+        "type": "function",
+        "z": "315c68e481dfdff6",
+        "name": "Format Results",
+        "func": "var votingData = []\n\nconst data = msg.payload.data[0];\nconst labels = msg.payload.labels\n\nfor (let i=0;i<labels.length; i++){\n    const dataSet = {\n        \"votes\": data[i],\n        \"candidate\": labels[i]\n    }\n    votingData.push(dataSet)\n}\n\nmsg.payload = votingData\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 380,
+        "wires": [
+            [
+                "e8ad4c7e5ffb4212"
+            ]
+        ]
+    },
+    {
+        "id": "1cfda31cfb3845d6",
+        "type": "ui_chart",
+        "z": "315c68e481dfdff6",
+        "name": "Results Chart",
+        "group": "cea41dcf941cfdb1",
+        "order": 4,
+        "width": "12",
+        "height": "8",
+        "label": "Voting Results",
+        "chartType": "pie",
+        "legend": "true",
+        "xformat": "auto",
+        "interpolate": "linear",
+        "nodata": "No votes until Now",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": false,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": "0",
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#3584e4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#f5c211",
+            "#c061cb",
+            "#865e3c",
+            "#a51d2d",
+            "#57e389",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1350,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e550b25e6587a863",
+        "type": "function",
+        "z": "315c68e481dfdff6",
+        "name": "Reset Chart",
+        "func": "return { payload: [], topic: 'reset' };",
+        "outputs": 1,
+        "x": 950,
+        "y": 140,
+        "wires": [
+            [
+                "1cfda31cfb3845d6"
+            ]
+        ]
+    },
+    {
+        "id": "52b250add2763335",
+        "type": "ui_text",
+        "z": "315c68e481dfdff6",
+        "group": "cea41dcf941cfdb1",
+        "order": 5,
+        "width": "6",
+        "height": "1",
+        "name": "Vote Status",
+        "label": "Status",
+        "format": "Vote submitted!",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 980,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e8ad4c7e5ffb4212",
+        "type": "split",
+        "z": "315c68e481dfdff6",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 960,
+        "y": 380,
+        "wires": [
+            [
+                "34eb969902f8e068"
+            ]
+        ]
+    },
+    {
+        "id": "34eb969902f8e068",
+        "type": "change",
+        "z": "315c68e481dfdff6",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "payload.candidate",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.votes",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1130,
+        "y": 380,
+        "wires": [
+            [
+                "1cfda31cfb3845d6"
+            ]
+        ]
+    },
+    {
+        "id": "0b3470b00cb6376d",
+        "type": "ui_button",
+        "z": "315c68e481dfdff6",
+        "name": "",
+        "group": "cea41dcf941cfdb1",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clear Data",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "clear",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 520,
+        "y": 100,
+        "wires": [
+            [
+                "054f3f5fac949767",
+                "e550b25e6587a863"
+            ]
+        ]
+    },
+    {
+        "id": "4a9db9acfdf4a47b",
+        "type": "ui_text_input",
+        "z": "315c68e481dfdff6",
+        "name": "Voter Name",
+        "label": "Your name",
+        "tooltip": "",
+        "group": "cea41dcf941cfdb1",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 70,
+        "y": 260,
+        "wires": [
+            [
+                "16f115db511cee77"
+            ]
+        ]
+    },
+    {
+        "id": "16f115db511cee77",
+        "type": "function",
+        "z": "315c68e481dfdff6",
+        "name": "Pass Voter Name",
+        "func": "flow.set(\"voter\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "8cd1e3ef75c4d885",
+                "6f570e0a54172a97",
+                "ac578fbbf7c93e4e"
+            ]
+        ]
+    },
+    {
+        "id": "cea41dcf941cfdb1",
+        "type": "ui_group",
+        "name": "Voting System",
+        "tab": "226679424afeec2a",
+        "order": 1,
+        "disp": true,
+        "width": "15",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "94969e73dab35de3",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "226679424afeec2a",
+        "type": "ui_tab",
+        "name": "Voting System",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
