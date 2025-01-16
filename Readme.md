@@ -1,6 +1,6 @@
 # Voting System
 
-This project implements a voting system with MQTT and FastAPI and FlashMQ broker. It allows users to cast votes via MQTT
+This project implements a voting system with MQTT, FastAPI and FlashMQ broker. It allows users to cast votes via MQTT
 messages and provides a REST API for monitoring voting results. The results will be visualized dynamically using
 Node-RED.
 
