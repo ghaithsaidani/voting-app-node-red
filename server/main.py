@@ -23,7 +23,6 @@ class VotingServer:
         self.client.on_message = self._on_message
         self.client.on_disconnect = self._on_disconnect
 
-        # Set up error handling
         self.client.enable_logger(logger)
 
     def _on_connect(self, client, userdata, flags, rc, properties=None):
@@ -76,7 +75,6 @@ class VotingServer:
                 "labels": labels,
                 "data": [data],
             }
-            # Publish formatted data to the MQTT topic
             self.client.publish("voting/results", json.dumps(chart_data))
             logger.info(f"Published results: {chart_data}")
         except Exception as e:
@@ -85,7 +83,7 @@ class VotingServer:
     def clear_results(self):
         self.votes.clear()
         self.vote_history.clear()
-        self._update_results()  # Publish the cleared results
+        self._update_results()
         logger.info("Voting results cleared")
 
     def start(self):
